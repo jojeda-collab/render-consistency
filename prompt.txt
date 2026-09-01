@@ -1,0 +1,9 @@
+This is a 3D architectural rendering. Re-photograph the building as a real photograph in the style of a medium format architectural film shoot. Keep the architecture exactly as designed: same forms, proportions, openings and materials. Match every material color exactly as rendered, at the same hue; do not shift any material toward grey, beige, warmer or cooler. Everything else can change.
+
+Reframe from eye level with straight verticals and a normal-to-slightly-long lens, no wide-angle stretch. Let landscape, foreground planting or context take up as much of the frame as the building; the building does not need to be centered or shown whole.
+
+Overcast day: flat pale grey-white sky with no blue and no visible cloud detail, soft diffuse light from above, no direct sun, no hard cast shadows, only faint soft shading where light is blocked. Faint atmospheric haze on anything distant.
+
+The building is newly completed and well kept. Replace all render content with the real thing: real people if any, few and candid, often facing away; real vegetation matching the designed planting, healthy and maintained, with the natural irregularity of living plants but no dead growth, no weeds, nothing overgrown; paving and hard surfaces clean and swept; materials as built, real texture and slight tonal variation across surfaces, but no staining, dirt or damage.
+
+Shot on a Mamiya RZ67, 110mm f/2.8, Kodak Portra 400, scanned from the negative. Low contrast, lifted shadows, no pure black or blown white, fine even grain across the whole frame. Muted palette, greens pushed toward olive, slight cool magenta-cyan cast in the sky and highlights; the haze and low contrast cover the building too, but its materials keep their rendered hue. No HDR, no sharpening, no vignette.
