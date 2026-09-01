@@ -24,6 +24,23 @@
 
   var initial = projectIndexFromHash();
 
+  /* A browser holding a cached index.html pairs it with the data.js that
+     page asked for, which can predate a newly added project. The deep link
+     then names a project this copy has never heard of, and we would quietly
+     fall back to the first one - looking like the project was never added.
+     Reload once from a URL the cache has not seen, which fetches current
+     markup and data. The r= guard stops this repeating on a real typo. */
+  (function () {
+    var wanted = (location.hash || '').replace(/^#/, '');
+    if (!wanted || /[?&]r=/.test(location.search)) return;
+    var known = false;
+    for (var i = 0; i < PROJECTS.length; i++) {
+      if (PROJECTS[i].id === wanted) { known = true; break; }
+    }
+    if (known) return;
+    location.replace(location.pathname + '?r=' + (+new Date()) + location.hash);
+  })();
+
   PROJECTS.forEach(function (p, i) {
     var isActive = i === initial;
 
