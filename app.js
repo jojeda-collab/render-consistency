@@ -2,11 +2,12 @@
 (function () {
   'use strict';
 
+  /* Examples are numbered only; the slug just locates the files. */
   var EXAMPLES = [
-    { n: 1, title: 'Street elevation, arches',       slug: '01-street-arches' },
-    { n: 2, title: 'Street elevation, spiral stair', slug: '02-street-spiral-stair' },
-    { n: 3, title: 'Roof walkway',                   slug: '03-roof-walkway' },
-    { n: 4, title: 'Courtyard',                      slug: '04-courtyard' }
+    { n: 1, slug: '01-street-arches' },
+    { n: 2, slug: '02-street-spiral-stair' },
+    { n: 3, slug: '03-roof-walkway' },
+    { n: 4, slug: '04-courtyard' }
   ];
 
   var OUTPUTS = [
@@ -28,17 +29,15 @@
 
   function buildExample(ex, isFirst) {
     var lazy = isFirst ? 'eager' : 'lazy';
+    var name = pad(ex.n);
 
     var section = el('section', 'example');
-    section.id = 'ex-' + ex.slug;
+    section.id = 'ex-' + name;
 
     var head = el('div', 'example-head');
 
     var h2 = el('h2', 'example-title');
-    var num = el('span', 'num');
-    num.textContent = pad(ex.n);
-    h2.appendChild(num);
-    h2.appendChild(document.createTextNode(ex.title));
+    h2.textContent = name;
     head.appendChild(h2);
 
     var wipe = el('div', 'wipe');
@@ -49,7 +48,7 @@
       var img = new Image();
       img.className = 'out out-' + o.key;
       img.src = 'images/' + ex.slug + '--' + o.key + '.jpg';
-      img.alt = ex.title + ' - ' + o.label + ' output';
+      img.alt = 'Example ' + name + ' - ' + o.label + ' output';
       img.loading = lazy;
       img.decoding = 'async';
       img.draggable = false;
@@ -63,7 +62,7 @@
     var orig = new Image();
     orig.className = 'orig';
     orig.src = 'images/' + ex.slug + '--original.jpg';
-    orig.alt = ex.title + ' - original 3D rendering';
+    orig.alt = 'Example ' + name + ' - original 3D rendering';
     orig.loading = lazy;
     orig.decoding = 'async';
     orig.draggable = false;
@@ -82,7 +81,7 @@
     handle.type = 'button';
     handle.className = 'handle';
     handle.setAttribute('role', 'slider');
-    handle.setAttribute('aria-label', ex.title + ' - wipe between render and AI output');
+    handle.setAttribute('aria-label', 'Example ' + name + ' - wipe between render and AI output');
     handle.setAttribute('aria-valuemin', '0');
     handle.setAttribute('aria-valuemax', '100');
     var arrows = el('span', 'arrows');
@@ -93,7 +92,7 @@
     /* Toggle */
     var toggle = el('div', 'toggle');
     toggle.setAttribute('role', 'group');
-    toggle.setAttribute('aria-label', ex.title + ' - choose AI output');
+    toggle.setAttribute('aria-label', 'Example ' + name + ' - choose AI output');
 
     var buttons = {};
     OUTPUTS.forEach(function (o) {
