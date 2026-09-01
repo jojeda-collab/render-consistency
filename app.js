@@ -2,17 +2,24 @@
 (function () {
   'use strict';
 
-  /* Examples are numbered only. `outputs` lists the AI outputs that exist
-     for a project; a project with one output gets no toggle. `ext` overrides
-     the default jpg extension for an output that was supplied as png. */
+  /* Examples are numbered only. `outputs` lists the AI outputs a project has;
+     an example with only one output gets no toggle. `exampleOutputs` narrows
+     that for individual examples whose set is not complete yet. `ext`
+     overrides the default jpg extension for an output supplied as png. */
   var PROJECTS = [
-    { id: 'the-prospect', name: 'The Prospect', count: 4, outputs: ['gemini', 'chatgpt'] },
-    { id: '29',           name: '29',           count: 3, outputs: ['gemini', 'chatgpt'],
+    { id: 'the-prospect',  name: 'The Prospect',  count: 4, outputs: ['gemini', 'chatgpt'] },
+    { id: '29',            name: '29',            count: 3, outputs: ['gemini', 'chatgpt'],
+      ext: { chatgpt: 'png' } },
+    { id: 'bl-community',  name: 'BL Community',  count: 4, outputs: ['gemini', 'chatgpt'],
       ext: { chatgpt: 'png' } }
   ];
 
   function extFor(p, key) {
     return (p.ext && p.ext[key]) || 'jpg';
+  }
+
+  function outputsFor(p, name) {
+    return (p.exampleOutputs && p.exampleOutputs[name]) || p.outputs;
   }
 
   var LABELS = { gemini: 'Gemini', chatgpt: 'ChatGPT' };
@@ -121,10 +128,11 @@
     head.appendChild(h2);
 
     var wipe = el('div', 'wipe');
+    var outputs = outputsFor(p, name);
 
     /* AI outputs (right side), stacked underneath; one visible at a time */
     var outs = {};
-    p.outputs.forEach(function (key) {
+    outputs.forEach(function (key) {
       var img = new Image();
       img.className = 'out out-' + key;
       img.src = base + '--' + key + '.' + extFor(p, key);
@@ -136,7 +144,7 @@
       outs[key] = img;
       wipe.appendChild(img);
     });
-    outs[p.outputs[0]].classList.add('is-active');
+    outs[outputs[0]].classList.add('is-active');
 
     /* Original render (left side), clipped to the handle */
     var orig = new Image();
@@ -152,7 +160,7 @@
     var tagLeft = el('span', 'tag tag-left');
     tagLeft.textContent = 'Render';
     var tagRight = el('span', 'tag tag-right');
-    tagRight.textContent = LABELS[p.outputs[0]];
+    tagRight.textContent = LABELS[outputs[0]];
     wipe.appendChild(tagLeft);
     wipe.appendChild(tagRight);
 
@@ -170,19 +178,19 @@
     wipe.appendChild(handle);
 
     /* Output toggle, only when there is more than one output to choose from */
-    if (p.outputs.length > 1) {
+    if (outputs.length > 1) {
       var toggle = el('div', 'toggle');
       toggle.setAttribute('role', 'group');
       toggle.setAttribute('aria-label', p.name + ' ' + name + ' - choose AI output');
 
       var buttons = {};
-      p.outputs.forEach(function (key, i) {
+      outputs.forEach(function (key, i) {
         var b = document.createElement('button');
         b.type = 'button';
         b.textContent = LABELS[key];
         b.setAttribute('aria-pressed', String(i === 0));
         b.addEventListener('click', function () {
-          p.outputs.forEach(function (k) {
+          outputs.forEach(function (k) {
             var on = k === key;
             outs[k].classList.toggle('is-active', on);
             buttons[k].setAttribute('aria-pressed', String(on));
@@ -195,7 +203,7 @@
       head.appendChild(toggle);
     } else {
       var only = el('span', 'single-output');
-      only.textContent = LABELS[p.outputs[0]];
+      only.textContent = LABELS[outputs[0]];
       head.appendChild(only);
     }
 
