@@ -3,7 +3,7 @@
 A comparison site: 3D architectural renderings re-shot as medium format film
 photographs, using one reusable prompt.
 
-Each example is a before/after wipe slider — the original rendering on the left,
+Projects are switched with the tabs at the top (deep-linkable, e.g. `#29`). Each example is a before/after wipe slider — the original rendering on the left,
 the AI output on the right — with a toggle to switch the output between
 **Gemini** and **ChatGPT**. The prompt used for every image is on the page in a
 collapsible section, and is also kept here as `prompt.txt`.
