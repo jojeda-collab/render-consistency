@@ -2,8 +2,14 @@
 
 Rules, deliberately conservative so the small originals keep their exact bytes:
   - PNG  -> always re-encoded to JPEG (the big win; PNG is wrong for photos)
-  - JPEG -> re-encoded only if it is over MAX_DIM on a side, or over BIG_BYTES
-  - anything already small and within MAX_DIM is left untouched
+  - JPEG -> re-encoded only if it is over MAX_DIM on a side
+  - anything already within MAX_DIM is left untouched
+
+Both conditions are things a single pass fixes permanently, which makes this
+script idempotent: re-running it re-encodes nothing and so cannot stack up
+generations of JPEG loss. Do not add a "re-encode anything over N bytes" rule
+— a file that is still large after a pass is already at QUALITY, and would be
+re-encoded on every subsequent run.
 
 Aspect ratio is preserved by scaling the long side to MAX_DIM and rounding the
 short side, which is what the page uses to size each comparison container.
@@ -15,7 +21,6 @@ from PIL import Image
 ROOT = sys.argv[1] if len(sys.argv) > 1 else "images"
 MAX_DIM = 2000
 QUALITY = 82
-BIG_BYTES = 1_000_000
 
 Image.MAX_IMAGE_PIXELS = None
 
@@ -37,9 +42,8 @@ for dirpath, _dirnames, filenames in os.walk(ROOT):
             w, h = im.size
             is_png = ext == ".png"
             too_big = max(w, h) > MAX_DIM
-            heavy = size_before > BIG_BYTES
 
-            if not (is_png or too_big or heavy):
+            if not (is_png or too_big):
                 after_total += size_before
                 rows.append((src, w, h, size_before, w, h, size_before, "kept"))
                 continue
