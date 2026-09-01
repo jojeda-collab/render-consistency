@@ -48,6 +48,35 @@
 
   tabsRoot.setAttribute('role', 'tablist');
 
+  /* On narrow screens the tab strip scrolls sideways instead of wrapping, so
+     the chosen project has to be brought into view. Setting scrollLeft beats
+     scrollIntoView here: it only touches the strip, never the page, and it is
+     not affected by the strip's width still settling. */
+  function revealTab(i) {
+    var nav = tabsRoot, t = tabs[i];
+    if (!nav || !t || nav.scrollWidth <= nav.clientWidth) return;
+    /* measured from rects rather than offsetLeft, which is relative to the
+       nearest positioned ancestor and so would not be the strip */
+    var navRect = nav.getBoundingClientRect();
+    var tabRect = t.getBoundingClientRect();
+    var delta = (tabRect.left - navRect.left) - (nav.clientWidth - tabRect.width) / 2;
+    nav.scrollLeft = Math.max(0, nav.scrollLeft + delta);
+  }
+
+  /* select() covers every later change; the first paint is built above, so a
+     deep link needs one nudge here, after layout has settled. */
+  if (initial > 0) {
+    var revealInitial = function () { revealTab(initial); };
+    /* twice on purpose: the first frame is usually enough, but the strip has
+       sometimes not settled its scroll width by then, and load always has */
+    if (window.requestAnimationFrame) {
+      requestAnimationFrame(revealInitial);
+    } else {
+      revealInitial();
+    }
+    window.addEventListener('load', revealInitial);
+  }
+
   function projectIndexFromHash() {
     var h = (location.hash || '').replace(/^#/, '');
     for (var i = 0; i < PROJECTS.length; i++) {
@@ -64,6 +93,7 @@
       panels[j].hidden = !on;
     });
     if (focusTab) tabs[i].focus();
+    revealTab(i);
     try {
       history.replaceState(null, '', '#' + PROJECTS[i].id);
     } catch (err) { /* file:// and the like */ }
