@@ -13,7 +13,8 @@ window.RC = {
     { id: 'the-prospect', name: 'The Prospect', count: 4, outputs: ['gemini', 'chatgpt'] },
     { id: '29',           name: '29',           count: 3, outputs: ['gemini', 'chatgpt'] },
     { id: 'bl-community', name: 'BL Community', count: 4, outputs: ['gemini', 'chatgpt'] },
-    { id: 'rapa-nui',     name: 'Rapa Nui',     count: 4, outputs: ['gemini'] }
+    { id: 'rapa-nui',     name: 'Rapa Nui',     count: 4, outputs: ['gemini'] },
+    { id: 'mismo',        name: 'Mismo',        count: 8, outputs: ['gemini'] }
   ],
 
   labels: { gemini: 'Gemini', chatgpt: 'ChatGPT', original: 'Render' },
