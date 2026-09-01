@@ -31,6 +31,23 @@ tools/          make-zips.py, optimise-images.py
 `data.js` is the single source of truth for which projects and examples exist.
 Add a project there and every page picks it up.
 
+## Bump the asset version when you change css or js
+
+GitHub Pages serves everything with `Cache-Control: max-age=600`, so a browser
+that has the site will keep using its copy of `style.css`, `data.js`, `app.js`
+and `gallery.js` for ten minutes. That produced a page running new markup
+against a stale `data.js`, which simply left the newest project out.
+
+The three html files reference those four assets with a `?v=N`. Bump N in all
+three whenever any of them changes, so a new page never pairs with old code:
+
+```
+sed -i 's/?v=2/?v=3/g' index.html gemini.html chatgpt.html
+```
+
+Images do not need this - their filenames are stable and their content is
+replaced in place only rarely.
+
 ## After adding or replacing images
 
 Images are capped at 2000px on the long side and stored as progressive JPEG
