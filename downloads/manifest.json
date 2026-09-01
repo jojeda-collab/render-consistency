@@ -1,0 +1,10 @@
+{
+  "gemini": {
+    "files": 11,
+    "bytes": 5929529
+  },
+  "chatgpt": {
+    "files": 11,
+    "bytes": 3515699
+  }
+}

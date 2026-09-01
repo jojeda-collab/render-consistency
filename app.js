@@ -2,20 +2,15 @@
 (function () {
   'use strict';
 
-  /* Examples are numbered only. `outputs` lists the AI outputs a project has;
-     an example with only one output gets no toggle. `exampleOutputs` narrows
-     that for individual examples whose set is not complete yet. */
-  var PROJECTS = [
-    { id: 'the-prospect',  name: 'The Prospect',  count: 4, outputs: ['gemini', 'chatgpt'] },
-    { id: '29',            name: '29',            count: 3, outputs: ['gemini', 'chatgpt'] },
-    { id: 'bl-community',  name: 'BL Community',  count: 4, outputs: ['gemini', 'chatgpt'] }
-  ];
+  var RC = window.RC;
+  if (!RC) return;
+
+  var PROJECTS = RC.projects;
+  var LABELS = RC.labels;
 
   function outputsFor(p, name) {
-    return (p.exampleOutputs && p.exampleOutputs[name]) || p.outputs;
+    return RC.outputsFor(p, name);
   }
-
-  var LABELS = { gemini: 'Gemini', chatgpt: 'ChatGPT' };
 
   var START_PERCENT = 50;
   var KEY_STEP = 2;
