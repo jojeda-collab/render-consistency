@@ -4,19 +4,12 @@
 
   /* Examples are numbered only. `outputs` lists the AI outputs a project has;
      an example with only one output gets no toggle. `exampleOutputs` narrows
-     that for individual examples whose set is not complete yet. `ext`
-     overrides the default jpg extension for an output supplied as png. */
+     that for individual examples whose set is not complete yet. */
   var PROJECTS = [
     { id: 'the-prospect',  name: 'The Prospect',  count: 4, outputs: ['gemini', 'chatgpt'] },
-    { id: '29',            name: '29',            count: 3, outputs: ['gemini', 'chatgpt'],
-      ext: { chatgpt: 'png' } },
-    { id: 'bl-community',  name: 'BL Community',  count: 4, outputs: ['gemini', 'chatgpt'],
-      ext: { chatgpt: 'png' } }
+    { id: '29',            name: '29',            count: 3, outputs: ['gemini', 'chatgpt'] },
+    { id: 'bl-community',  name: 'BL Community',  count: 4, outputs: ['gemini', 'chatgpt'] }
   ];
-
-  function extFor(p, key) {
-    return (p.ext && p.ext[key]) || 'jpg';
-  }
 
   function outputsFor(p, name) {
     return (p.exampleOutputs && p.exampleOutputs[name]) || p.outputs;
@@ -135,7 +128,7 @@
     outputs.forEach(function (key) {
       var img = new Image();
       img.className = 'out out-' + key;
-      img.src = base + '--' + key + '.' + extFor(p, key);
+      img.src = base + '--' + key + '.jpg';
       img.alt = p.name + ' ' + name + ' - ' + LABELS[key] + ' output';
       img.loading = lazy;
       img.decoding = 'async';
