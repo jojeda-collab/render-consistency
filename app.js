@@ -1,4 +1,4 @@
-/* Render to Photograph - before/after wipe sliders */
+/* Render Consistency - before/after wipe sliders */
 (function () {
   'use strict';
 

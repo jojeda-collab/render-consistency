@@ -1,4 +1,4 @@
-# Render to Photograph
+# Render Consistency
 
 A comparison site: 3D architectural renderings re-shot as medium format film
 photographs, using one reusable prompt.
