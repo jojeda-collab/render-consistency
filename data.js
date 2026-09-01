@@ -5,11 +5,15 @@ window.RC = {
 
   /* Examples are numbered only. `outputs` lists the AI outputs a project has;
      `exampleOutputs` narrows that for individual examples whose set is not
-     complete yet. */
+     complete yet.
+
+     New projects are Gemini only. The three earlier projects keep the ChatGPT
+     outputs that were already made for them. */
   projects: [
     { id: 'the-prospect', name: 'The Prospect', count: 4, outputs: ['gemini', 'chatgpt'] },
     { id: '29',           name: '29',           count: 3, outputs: ['gemini', 'chatgpt'] },
-    { id: 'bl-community', name: 'BL Community', count: 4, outputs: ['gemini', 'chatgpt'] }
+    { id: 'bl-community', name: 'BL Community', count: 4, outputs: ['gemini', 'chatgpt'] },
+    { id: 'rapa-nui',     name: 'Rapa Nui',     count: 4, outputs: ['gemini'] }
   ],
 
   labels: { gemini: 'Gemini', chatgpt: 'ChatGPT', original: 'Render' },

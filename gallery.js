@@ -13,10 +13,12 @@
   if (!variant || !label || !root) return;
 
   var count = 0;
+  var shown = 0;
 
   RC.projects.forEach(function (p) {
     var names = RC.examplesWith(p, variant);
     if (!names.length) return;
+    shown++;
 
     var section = el('section', 'gallery-project');
     section.id = 'g-' + p.id;
@@ -72,9 +74,30 @@
     root.appendChild(section);
   });
 
+  /* Count only the projects that actually have this output, not every project. */
   var total = document.getElementById('total-count');
   if (total) {
-    total.textContent = count + ' images across ' + RC.projects.length + ' projects';
+    total.textContent = count + ' images across ' + shown +
+      (shown === 1 ? ' project' : ' projects');
+  }
+
+  /* Label the zip button from the manifest that built it, so the file count
+     and size cannot drift out of date when images are added or replaced.
+     Fetch fails on file://, which just leaves the plain "ZIP" label. */
+  var zipMeta = document.getElementById('zip-meta');
+  if (zipMeta && window.fetch) {
+    fetch('downloads/manifest.json')
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (m) {
+        var d = m && m[variant];
+        if (!d) return;
+        zipMeta.textContent = 'ZIP · ' + d.files + ' files · ' + mb(d.bytes);
+      })
+      .catch(function () { /* leave the fallback label */ });
+  }
+
+  function mb(bytes) {
+    return (bytes / 1048576).toFixed(1) + ' MB';
   }
 
   function el(tag, cls) {
