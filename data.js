@@ -15,7 +15,8 @@ window.RC = {
     { id: 'bl-community', name: 'BL Community', count: 4, outputs: ['gemini', 'chatgpt'] },
     { id: 'rapa-nui',     name: 'Rapa Nui',     count: 4, outputs: ['gemini'] },
     { id: 'mismo',        name: 'Mismo',        count: 8, outputs: ['gemini'] },
-    { id: 'utah-poolhouse', name: 'Utah Poolhouse', count: 5, outputs: ['gemini'] }
+    { id: 'utah-poolhouse', name: 'Utah Poolhouse', count: 5, outputs: ['gemini'] },
+    { id: 'prince',       name: 'Prince',       count: 6, outputs: ['gemini'] }
   ],
 
   labels: { gemini: 'Gemini', chatgpt: 'ChatGPT', original: 'Render' },

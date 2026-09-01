@@ -1,19 +1,22 @@
 """Optimise the Render Consistency image set.
 
 Rules, deliberately conservative so the small originals keep their exact bytes:
-  - PNG  -> always re-encoded to JPEG (the big win; PNG is wrong for photos)
-  - JPEG -> re-encoded only if it is over MAX_DIM on a side
-  - anything already within MAX_DIM is left untouched
+  - PNG / WEBP -> always re-encoded to JPEG (the big win, and the site only
+    ever serves .jpg so every output lands on one extension)
+  - JPEG over MAX_DIM -> resized and re-encoded
+  - JPEG within MAX_DIM -> trial re-encode, kept ONLY if it saves at least
+    SAVING_FLOOR; otherwise the original bytes are left exactly as they were
 
-Both conditions are things a single pass fixes permanently, which makes this
-script idempotent: re-running it re-encodes nothing and so cannot stack up
-generations of JPEG loss. Do not add a "re-encode anything over N bytes" rule
-— a file that is still large after a pass is already at QUALITY, and would be
-re-encoded on every subsequent run.
+That last rule is what keeps this idempotent. A plain "re-encode anything over
+N bytes" rule would re-fire on every run and stack up generations of JPEG loss.
+Measuring the actual saving instead is self-limiting: once a file has been
+through a pass it is already at QUALITY, so a second trial encode saves nothing
+close to SAVING_FLOOR and the original is kept untouched.
 
 Aspect ratio is preserved by scaling the long side to MAX_DIM and rounding the
 short side, which is what the page uses to size each comparison container.
 """
+import io
 import os
 import sys
 from PIL import Image
@@ -21,6 +24,7 @@ from PIL import Image
 ROOT = sys.argv[1] if len(sys.argv) > 1 else "images"
 MAX_DIM = 2000
 QUALITY = 82
+SAVING_FLOOR = 0.30  # a trial re-encode must save this fraction to be kept
 
 Image.MAX_IMAGE_PIXELS = None
 
@@ -31,7 +35,7 @@ after_total = 0
 for dirpath, _dirnames, filenames in os.walk(ROOT):
     for fn in sorted(filenames):
         ext = os.path.splitext(fn)[1].lower()
-        if ext not in (".jpg", ".jpeg", ".png"):
+        if ext not in (".jpg", ".jpeg", ".png", ".webp"):
             continue
 
         src = os.path.join(dirpath, fn)
@@ -40,12 +44,24 @@ for dirpath, _dirnames, filenames in os.walk(ROOT):
 
         with Image.open(src) as im:
             w, h = im.size
-            is_png = ext == ".png"
+            needs_convert = ext in (".png", ".webp")
             too_big = max(w, h) > MAX_DIM
 
-            if not (is_png or too_big):
-                after_total += size_before
-                rows.append((src, w, h, size_before, w, h, size_before, "kept"))
+            if not (needs_convert or too_big):
+                # Trial encode in memory; keep it only if the saving is real.
+                buf = io.BytesIO()
+                im.convert("RGB").save(buf, "JPEG", quality=QUALITY,
+                                       optimize=True, progressive=True,
+                                       subsampling=0)
+                if buf.tell() > size_before * (1 - SAVING_FLOOR):
+                    after_total += size_before
+                    rows.append((src, w, h, size_before, w, h, size_before, "kept"))
+                    continue
+                with open(src, "wb") as out:
+                    out.write(buf.getvalue())
+                size_after = os.path.getsize(src)
+                after_total += size_after
+                rows.append((src, w, h, size_before, w, h, size_after, "recompressed"))
                 continue
 
             im = im.convert("RGB")
@@ -60,13 +76,13 @@ for dirpath, _dirnames, filenames in os.walk(ROOT):
             im.save(dst, "JPEG", quality=QUALITY, optimize=True,
                     progressive=True, subsampling=0)
 
-        if is_png:
+        if needs_convert:
             os.remove(src)
 
         size_after = os.path.getsize(dst)
         after_total += size_after
         rows.append((src, w, h, size_before, nw, nh, size_after,
-                     "png->jpg" if is_png else "re-encoded"))
+                     (ext[1:] + "->jpg") if needs_convert else "re-encoded"))
 
 name_w = max(len(r[0]) for r in rows)
 for src, w, h, sb, nw, nh, sa, what in rows:
