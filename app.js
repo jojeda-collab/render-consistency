@@ -141,14 +141,15 @@
     panel.setAttribute('aria-labelledby', 'tab-' + p.id);
     panel.hidden = !isActive;
 
-    for (var n = 1; n <= p.count; n++) {
-      /* only the very first example of the visible project loads eagerly */
-      panel.appendChild(buildExample(p, n, isActive && n === 1));
-    }
-
+    /* video leads the project, ahead of the stills */
     var vids = RC.videosFor(p.id);
     for (var v = 0; v < vids.length; v++) {
       panel.appendChild(buildVideo(vids[v]));
+    }
+
+    for (var n = 1; n <= p.count; n++) {
+      /* only the very first example of the visible project loads eagerly */
+      panel.appendChild(buildExample(p, n, isActive && n === 1));
     }
     return panel;
   }
