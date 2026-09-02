@@ -23,7 +23,8 @@ window.RC = {
     { id: 'ozarks-residence', name: 'Ozarks Residence', count: 6, outputs: ['gemini'] },
     { id: 'cedar-park',    name: 'Cedar Park',    count: 5, outputs: ['gemini'] },
     { id: 'howard',       name: 'Howard',       count: 5, outputs: ['gemini'] },
-    { id: 'f-residence',  name: 'F Residence',  count: 5, outputs: ['gemini'] }
+    { id: 'f-residence',  name: 'F Residence',  count: 5, outputs: ['gemini'] },
+    { id: 'art-bunker',   name: 'Art Bunker',   count: 6, outputs: ['gemini'] }
   ],
 
   labels: { gemini: 'Gemini', chatgpt: 'ChatGPT', original: 'Render' },

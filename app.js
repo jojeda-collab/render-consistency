@@ -323,9 +323,39 @@
      right from the moment anything in the pair has loaded. */
   function seedAspect(wipe, img, isOriginal) {
     if (!img.naturalWidth || !img.naturalHeight) return;
-    if (!isOriginal && wipe.dataset.aspectFrom === 'original') return;
-    wipe.style.aspectRatio = img.naturalWidth + ' / ' + img.naturalHeight;
-    wipe.dataset.aspectFrom = isOriginal ? 'original' : 'output';
+    if (isOriginal || wipe.dataset.aspectFrom !== 'original') {
+      wipe.style.aspectRatio = img.naturalWidth + ' / ' + img.naturalHeight;
+      wipe.dataset.aspectFrom = isOriginal ? 'original' : 'output';
+    }
+    /* the box may have just changed; re-check every image against it */
+    fitToBox(wipe);
+  }
+
+  /* An AI output is usually the same shape as its render, and fills the box.
+     Occasionally one comes back reframed - a landscape render returned as a
+     portrait - and filling the box would crop most of it away silently. Those
+     are letterboxed instead, so the whole frame stays visible and the reframing
+     is legible rather than hidden. */
+  var FIT_TOLERANCE = 1.02;
+
+  function fitToBox(wipe) {
+    var box = ratioOf(wipe.style.aspectRatio);
+    if (!box) return;
+    var imgs = wipe.querySelectorAll('img');
+    for (var i = 0; i < imgs.length; i++) {
+      var im = imgs[i];
+      if (!im.naturalWidth || !im.naturalHeight) continue;
+      var r = im.naturalWidth / im.naturalHeight;
+      var off = Math.max(r / box, box / r);
+      im.classList.toggle('is-letterboxed', off > FIT_TOLERANCE);
+    }
+  }
+
+  function ratioOf(str) {
+    var m = /^\s*([\d.]+)\s*\/\s*([\d.]+)\s*$/.exec(str || '');
+    if (!m) return 0;
+    var h = parseFloat(m[2]);
+    return h ? parseFloat(m[1]) / h : 0;
   }
 
   /* ---------- prompt copy ---------- */

@@ -331,6 +331,13 @@ body {
   -webkit-user-drag: none;
 }
 
+/* A reframed output (different shape from its render) is shown whole rather
+   than cropped to fill; the bars make the reframing visible. */
+.wipe img.is-letterboxed {
+  object-fit: contain;
+  background: #101010;
+}
+
 /* AI outputs sit underneath; only the active one is shown */
 .wipe .out { visibility: hidden; }
 .wipe .out.is-active { visibility: visible; }

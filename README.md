@@ -42,7 +42,7 @@ The three html files reference those four assets with a `?v=N`. Bump N in all
 three whenever any of them changes, so a new page never pairs with old code:
 
 ```
-sed -i 's/?v=6/?v=7/g' index.html gemini.html chatgpt.html
+sed -i 's/?v=7/?v=8/g' index.html gemini.html chatgpt.html
 ```
 
 Images do not need this - their filenames are stable and their content is
