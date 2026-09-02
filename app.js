@@ -145,7 +145,47 @@
       /* only the very first example of the visible project loads eagerly */
       panel.appendChild(buildExample(p, n, isActive && n === 1));
     }
+
+    var vids = RC.videosFor(p.id);
+    for (var v = 0; v < vids.length; v++) {
+      panel.appendChild(buildVideo(vids[v]));
+    }
     return panel;
+  }
+
+  /* A looping motion study. Muted autoplay is what makes a loop read as a loop,
+     but controls stay on: anything moving for more than a few seconds needs a
+     way to stop it. preload is metadata only so a 4K file on a hidden tab does
+     not pull megabytes nobody asked for. */
+  function buildVideo(v) {
+    var section = el('section', 'example video-example');
+
+    var head = el('div', 'example-head');
+    var h2 = el('h2', 'example-title');
+    h2.textContent = 'Motion';
+    head.appendChild(h2);
+    var meta = el('span', 'single-output');
+    meta.textContent = v.label + ' · ' + v.seconds + 's · ' + v.w + '×' + v.h;
+    head.appendChild(meta);
+    section.appendChild(head);
+
+    var frame = el('div', 'video-frame');
+    frame.style.aspectRatio = v.w + ' / ' + v.h;
+
+    var video = document.createElement('video');
+    video.src = v.file;
+    video.loop = true;
+    video.muted = true;
+    video.autoplay = true;
+    video.controls = true;
+    video.playsInline = true;
+    video.setAttribute('playsinline', '');
+    video.setAttribute('muted', '');
+    video.preload = 'metadata';
+    frame.appendChild(video);
+
+    section.appendChild(frame);
+    return section;
   }
 
   function buildExample(p, n, eager) {

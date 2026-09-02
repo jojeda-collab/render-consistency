@@ -29,6 +29,28 @@ window.RC = {
 
   labels: { gemini: 'Gemini', chatgpt: 'ChatGPT', original: 'Render' },
 
+  /* Looping motion studies. `project` puts one on that project's tab; every
+     entry also appears on videos.html. */
+  videos: [
+    {
+      id: '29-breeze',
+      project: '29',
+      file: 'videos/29--breeze.mp4',
+      label: 'Subtle breeze',
+      seconds: 10,
+      w: 3840,
+      h: 2160
+    }
+  ],
+
+  videosFor: function (projectId) {
+    var out = [];
+    for (var i = 0; i < this.videos.length; i++) {
+      if (this.videos[i].project === projectId) out.push(this.videos[i]);
+    }
+    return out;
+  },
+
   pad: function (n) {
     return n < 10 ? '0' + n : String(n);
   },
