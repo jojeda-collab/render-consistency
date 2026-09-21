@@ -12,6 +12,10 @@
   var root = document.getElementById('gallery');
   if (!variant || !label || !root) return;
 
+  /* Gemini is the output being signed off, so that is the page that carries
+     the review controls. Flip this to include another model. */
+  var REVIEWABLE = variant === 'gemini';
+
   var count = 0;
   var shown = 0;
 
@@ -66,6 +70,14 @@
       cap.appendChild(dl);
 
       fig.appendChild(cap);
+
+      /* Review lives on the chosen output, so only the model being reviewed
+         carries it. Keys are <project>/<example>, the same identity used
+         everywhere else. */
+      if (REVIEWABLE && window.RCReview) {
+        fig.appendChild(window.RCReview.control(p.id + '/' + name, p.name + ' ' + name));
+      }
+
       grid.appendChild(fig);
       count++;
     });
@@ -73,6 +85,8 @@
     section.appendChild(grid);
     root.appendChild(section);
   });
+
+  if (REVIEWABLE && window.RCReview) window.RCReview.mountBar();
 
   /* Count only the projects that actually have this output, not every project. */
   var total = document.getElementById('total-count');

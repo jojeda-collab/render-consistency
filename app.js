@@ -111,8 +111,6 @@
     });
     if (focusTab) tabs[i].focus();
     revealTab(i);
-    /* notes in a hidden panel cannot measure themselves; size them now */
-    if (window.RCReview) window.RCReview.refresh();
     try {
       history.replaceState(null, '', '#' + PROJECTS[i].id);
     } catch (err) { /* file:// and the like */ }
@@ -188,7 +186,6 @@
     frame.appendChild(video);
 
     section.appendChild(frame);
-    section.appendChild(review(v.project + '/motion', v.label));
     return section;
   }
 
@@ -288,19 +285,10 @@
 
     section.appendChild(head);
     section.appendChild(wipe);
-    section.appendChild(review(p.id + '/' + pad(n), p.name + ' ' + pad(n)));
 
     wireWipe(wipe, orig, handle);
     return section;
   }
-
-  /* Review control under each render, when review.js is loaded. */
-  function review(key, label) {
-    if (!window.RCReview) return document.createComment('no review');
-    return window.RCReview.control(key, label);
-  }
-
-  if (window.RCReview) window.RCReview.mountBar();
 
   /* ---------- wipe behaviour ---------- */
 

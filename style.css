@@ -751,3 +751,18 @@ body {
   }
   .review-name { width: 90px; }
 }
+
+/* Review inside a gallery column: stack, since a grid cell is far narrower
+   than a full-width comparison row. */
+.shot .review {
+  margin-top: 10px;
+  padding: 12px;
+  gap: 10px;
+}
+
+.shot .review-marks { flex: 1 1 100%; }
+.shot .review-marks .mark { flex: 1 1 50%; text-align: center; }
+.shot .review-note { flex: 1 1 100%; }
+
+/* clear the floating summary bar on the gallery pages */
+.gallery-project:last-child { margin-bottom: 128px; }
