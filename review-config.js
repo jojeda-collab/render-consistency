@@ -10,6 +10,6 @@
    While these are blank the review notes fall back to saving in each
    reviewer's own browser, so the page still works - it just is not shared. */
 window.RC_REVIEW = {
-  url: '',      /* e.g. https://abcdefghijkl.supabase.co  (no trailing slash) */
-  anonKey: ''   /* the key labelled "anon public" */
+  url: 'https://eidurncidlzhygvbisem.supabase.co',
+  anonKey: 'sb_publishable_uA1nb-_HqML8qXE58IAnig_pjVnWztG'
 };
